@@ -9,7 +9,7 @@ module Crawler
     def links_in(content)
       doc = Nokogiri::XML content
 
-      normalize_anchors doc.xpath('//a')
+      hrefs_from doc.xpath('//a')
     end
 
     def assets_in(content)
@@ -21,14 +21,10 @@ module Crawler
 
     private
 
-    def normalize_anchors(anchor_collection)
+    def hrefs_from(anchor_collection)
       anchor_collection.map do |anchor|
-        as_url anchor.attributes['href'].value
+        anchor.attributes['href'].value
       end
-    end
-
-    def as_url(href)
-      href.match(/^http[s]?:\/\//) ? href : "#{base}#{href}"
     end
 
     def names_for(asset_collection)
