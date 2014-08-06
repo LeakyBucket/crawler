@@ -28,9 +28,9 @@ describe Crawler::Page do
 
   describe "#links" do
     before do
-      processor = instance_double(Crawler::Processor)
+      processor = instance_double(Crawler::PageProcessor)
       allow(processor).to receive(:links_in).and_return(hrefs)
-      allow(Crawler::Processor).to receive(:new).and_return(processor)
+      allow(Crawler::PageProcessor).to receive(:new).and_return(processor)
       allow(@faraday_double).to receive(:get).and_return(@response_double)
       allow(@response_double).to receive(:body).and_return("body")
     end

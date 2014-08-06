@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Crawler::Processor do
+describe Crawler::PageProcessor do
   subject(:processor) { described_class.new('http://test.com') }
   let(:page) { File.read('./spec/fixtures/page.html') }
 

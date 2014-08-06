@@ -31,7 +31,7 @@ module Crawler
     end
 
     def processor
-      @processor ||= Processor.new(base)
+      @processor ||= PageProcessor.new(base)
     end
 
     def base

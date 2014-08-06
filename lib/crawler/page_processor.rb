@@ -1,5 +1,5 @@
 module Crawler
-  class Processor
+  class PageProcessor
     attr_reader :base
 
     def initialize(base)
