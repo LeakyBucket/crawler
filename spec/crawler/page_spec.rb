@@ -35,20 +35,10 @@ describe Crawler::Page do
       allow(@response_double).to receive(:body).and_return("body")
     end
 
-    it "normalizes absolute hrefs" do
-      expect(page.links).to include 'http://www.google.com/one/level/down'
-    end
+    it "returns all the links in the page" do
+      links = page.links
 
-    context "relative hrefs" do
-      it "normalizes relative hrefs when there is no file" do
-        expect(page.links).to include 'http://www.google.com/pages/one/level/from/here'
-      end
-
-      it "normalizes relative hrefs when there is a file" do
-        page = described_class.new('http://www.google.com/pages/pages.html')
-
-        expect(page.links).to include 'http://www.google.com/pages/one/level/from/here'
-      end
+      expect(links.length).to eq 3
     end
   end
 end

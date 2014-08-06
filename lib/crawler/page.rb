@@ -1,14 +1,16 @@
 module Crawler
   class Page
-    attr_reader :content, :base, :path, :links, :assets
+    attr_reader :content, :location, :links, :assets, :normalizer
 
     def initialize(location)
-      @content = get_page(location)
+      @location = location
+      @normalizer = HrefNormalizer.new(location)
+      @content = get_page
     end
 
     def links
       @links ||= processor.links_in(@content).map do |href|
-        url_for href
+        normalizer.url_for href
       end
     end
 
@@ -18,17 +20,8 @@ module Crawler
 
     private
 
-    def get_page(location)
-      decompose_location(location)
-
+    def get_page
       agent(base).get(path).body
-    end
-
-    def decompose_location(location)
-      parts = location.split('/')
-
-      @base = "#{parts[0]}//#{parts[2]}"
-      @path = parts[3..-1].join('/')
     end
 
     def agent(uri_base = nil)
@@ -41,27 +34,12 @@ module Crawler
       @processor ||= Processor.new(base)
     end
 
-    def url_for(href)
-      case href
-      when /^http/
-        href
-      when /^\//
-        base + href
-      else
-        url_from_relative href
-      end
+    def base
+      normalizer.base
     end
 
-    def url_from_relative(href)
-      "#{base}/#{path_without_file}/#{href}"
-    end
-
-    def path_without_file
-      if path.split('/').last.match(/\./)
-        path.split('/')[0..-2].join('/')
-      else
-        path
-      end
+    def path
+      normalizer.path
     end
   end
 end
