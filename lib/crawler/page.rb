@@ -26,6 +26,7 @@ module Crawler
 
     def agent(uri_base = nil)
       @agent ||= Faraday.new(url: uri_base) do |faraday|
+        faraday.use FaradayMiddleware::FollowRedirects, limit: 3
         faraday.adapter Faraday.default_adapter
       end
     end
