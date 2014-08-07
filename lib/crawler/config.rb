@@ -1,15 +1,16 @@
 module Crawler
   class Config
-    attr_reader :boundary
+    attr_reader :boundary, :domain
 
     def initialize(domain, subs = false)
-      set_boundary(domain, subs)
+      @domain = domain
+      set_boundary(subs)
     end
 
     private
 
-    def set_boundary(domain, subs)
-      if subs
+    def set_boundary(allow_subs)
+      if allow_subs
         @boundary = /^([\w-]*\.)*#{domain}$/
       else
         @boundary = /^#{domain}$/
