@@ -7,9 +7,9 @@ module Crawler
     end
 
     def links_in(content)
-      doc = Nokogiri::XML content
+      doc = Nokogiri::HTML content
 
-      hrefs_from doc.xpath('//a')
+      hrefs_from(doc.xpath('//a')).compact
     end
 
     def assets_in(content)
@@ -23,13 +23,17 @@ module Crawler
 
     def hrefs_from(anchor_collection)
       anchor_collection.map do |anchor|
-        anchor.attributes['href'].value
+        if anchor.attributes.has_key? 'href'
+          anchor.attributes['href'].value
+        else
+          next
+        end
       end
     end
 
     def names_for(asset_collection)
       asset_collection.map do |asset|
-        if asset.attributes.has_key?('src')
+        if asset.attributes.has_key? 'src'
           asset.attributes['src'].value
         else
           next
