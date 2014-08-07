@@ -29,14 +29,16 @@ module Crawler
     end
 
     def url_from_relative(href)
-      "#{base}/#{path_without_file}/#{href}"
+      "#{base}#{path_without_file}#{href}"
     end
 
     def path_without_file
-      if path.split('/').last.match(/\./)
-        path.split('/')[0..-2].join('/')
+      if path.empty?
+        '/'
+      elsif path.split('/').last.match(/\./)
+        '/' + path.split('/')[0..-2].join('/') + '/'
       else
-        path
+        "/#{path}/"
       end
     end
   end
