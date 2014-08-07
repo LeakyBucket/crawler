@@ -9,7 +9,7 @@ module Crawler
 
     def add(page)
       site[page.location] = {
-        links: page.links,
+        links: Set.new(page.links),
         assets: assets_index_for(page)
       }
     end

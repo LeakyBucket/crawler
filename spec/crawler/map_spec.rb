@@ -36,7 +36,7 @@ describe Crawler::Map do
     it "adds the pages links" do
       page_record = site_map.site[url]
 
-      expect(page_record[:links]).to eq links
+      expect(page_record[:links].to_a).to eq links
     end
 
     it "adds the assets to the static_assets collection" do
