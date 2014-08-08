@@ -14,7 +14,8 @@ describe Crawler::Map do
   let(:assets) do
     [
       'styles.css',
-      'behaviors.js'
+      'behaviors.js',
+      'link_stuff'
     ]
   end
 

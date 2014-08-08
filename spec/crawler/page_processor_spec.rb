@@ -7,7 +7,8 @@ describe Crawler::PageProcessor do
   let(:assets) do
     [
       'http://www.google.com/logo.jpg',
-      'layout.css'
+      'layout.css',
+      'link_stuff'
     ]
   end
 
