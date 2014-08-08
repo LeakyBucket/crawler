@@ -13,8 +13,8 @@ module Crawler
     end
 
     def assets_in(content)
-      doc = Nokogiri::XML content
-      assets = names_for(doc.xpath('//img') + doc.xpath('//script'))
+      doc = Nokogiri::HTML content
+      assets = names_for(doc.xpath('//img') + doc.xpath('//script') + doc.xpath('//link'))
 
       assets.compact
     end
@@ -33,6 +33,8 @@ module Crawler
       asset_collection.map do |asset|
         if asset.attributes.has_key? 'src'
           asset.attributes['src'].value
+        elsif asset.attributes.has_key? 'href'
+          asset.attributes['href'].value
         end
       end
     end
