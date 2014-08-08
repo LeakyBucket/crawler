@@ -9,7 +9,7 @@ module Crawler
     def links_in(content)
       doc = Nokogiri::HTML content
 
-      hrefs_from(doc.xpath('//a')).compact
+      hrefs_from(doc.xpath('//a')).compact.delete_if { |href| href.empty? }
     end
 
     def assets_in(content)
