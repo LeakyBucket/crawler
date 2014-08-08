@@ -1,45 +1,45 @@
+require 'uri'
+
+class String
+  def to_ascii
+    self.encode('ascii', invalid: :replace, undef: :replace, replace: '')
+  end
+end
+
 module Crawler
   class HrefNormalizer
     attr_reader :location, :base, :path
 
     def initialize(location)
-      @location = location
-
-      decompose_location
+      @location = URI.parse location
     end
 
     def url_for(href)
-      case href
-      when /^http/
-        href
-      when /^\//
-        base + href
-      else
-        url_from_relative href
-      end
+      URI.join(location, clean(href)).to_s
+    rescue => e
+      nil # because it's easier to compact later
+    end
+
+    def base
+      "#{location.scheme}://#{location.host}"
+    end
+
+    def path
+      location.path
     end
 
     private
 
-    def decompose_location
-      parts = location.split('/')
-
-      @base = "#{parts[0]}//#{parts[2]}"
-      @path = parts[3..-1].join('/')
+    def clean(href)
+      strip_fragment strip_query(href.to_ascii)
     end
 
-    def url_from_relative(href)
-      "#{base}#{path_without_file}#{href}"
+    def strip_query(href)
+      href.split('?').first || ''
     end
 
-    def path_without_file
-      if path.empty?
-        '/'
-      elsif path.split('/').last.match(/\./)
-        '/' + path.split('/')[0..-2].join('/') + '/'
-      else
-        "/#{path}/"
-      end
+    def strip_fragment(href)
+      href.split('#').first || ''
     end
   end
 end
