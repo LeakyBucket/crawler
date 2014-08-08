@@ -25,8 +25,6 @@ module Crawler
       anchor_collection.map do |anchor|
         if anchor.attributes.has_key? 'href'
           anchor.attributes['href'].value
-        else
-          next
         end
       end
     end
@@ -35,8 +33,6 @@ module Crawler
       asset_collection.map do |asset|
         if asset.attributes.has_key? 'src'
           asset.attributes['src'].value
-        else
-          next
         end
       end
     end
