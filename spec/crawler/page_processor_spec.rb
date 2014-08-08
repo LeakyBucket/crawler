@@ -22,7 +22,7 @@ describe Crawler::PageProcessor do
     it "returns a list of all links in the page" do
       links = processor.links_in page
 
-      expect(links.length).to eq 3
+      expect(links.length).to eq 4
     end
   end
 end
