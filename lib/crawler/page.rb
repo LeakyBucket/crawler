@@ -9,9 +9,7 @@ module Crawler
     end
 
     def links
-      @links ||= processor.links_in(@content).map do |href|
-        normalizer.url_for href
-      end
+      @links ||= Set.new filtered_links
     end
 
     def assets
@@ -25,10 +23,14 @@ module Crawler
     end
 
     def agent(uri_base = nil)
-      @agent ||= Faraday.new(url: uri_base) do |faraday|
-        faraday.use FaradayMiddleware::FollowRedirects, limit: 3
+      @agent ||= Faraday.new(url: uri_base, ssl: {verify: false}) do |faraday|
+        faraday.use FaradayMiddleware::FollowRedirects, limit: 10
         faraday.adapter Faraday.default_adapter
       end
+    end
+
+    def filtered_links
+      processor.links_in(@content).map { |href| normalizer.url_for href }.compact
     end
 
     def processor
