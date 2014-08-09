@@ -1,11 +1,12 @@
 module Crawler
   class Page
-    attr_reader :content, :location, :links, :assets, :normalizer
+    attr_reader :content, :location, :normalizer, :response_code
 
     def initialize(location)
       @location = location
       @normalizer = HrefNormalizer.new(location)
-      @content = get_page
+
+      get_page
     end
 
     def links
@@ -19,7 +20,10 @@ module Crawler
     private
 
     def get_page
-      agent(base).get(path).body
+      response = agent(base).get(path)
+
+      @content = response.body
+      @response_code = response.status
     end
 
     def agent(uri_base = nil)
