@@ -1,0 +1,54 @@
+#!/usr/bin/env ruby
+
+require './lib/crawler.rb'
+
+class Mapper
+  attr_reader :map, :config
+
+  def initialize(domain)
+    @config = Crawler::Config.new(domain)
+    @map = Crawler::Map.new
+  end
+
+  def crawl(location)
+    links = Set.new [location]
+
+    until links.empty?
+      links = links.merge(follow_link(links.first) || [])
+      links = links.delete(links.first)
+    end
+  end
+
+  private
+
+  def follow_link(location)
+    page = Crawler::Page.new(location)
+
+    visited << location
+
+    if page.response_code / 100 == 2
+      save_page page
+      filter_external_domains(page.links.to_a) - visited
+    end
+  end
+
+  def save_page(page)
+    map.add page
+  end
+
+  def filter_external_domains(found_links)
+    (found_links || []).select { |link| link.split('/')[2].to_s.match config.boundary }
+  end
+
+  def visited
+    @visited ||= []
+  end
+end
+
+domain = ARGV[0]
+
+mapper = Mapper.new domain
+mapper.crawl "http://#{domain}"
+
+emitter = Crawler::Emitters.new :dot
+emitter.emit mapper.map, './map.dot'
