@@ -11,6 +11,13 @@ describe Crawler::Page do
     ]
   end
 
+  let(:assets) do
+    [
+      'layout.css',
+      'http://www.example.com/logo.jpg'
+    ]
+  end
+
   before do
     @response_double = double
     @faraday_double = instance_double(Faraday::Connection)
@@ -41,6 +48,20 @@ describe Crawler::Page do
       links = page.links
 
       expect(links.length).to eq 3
+    end
+  end
+
+  describe "#assets" do
+    before do
+      processor = instance_double(Crawler::PageProcessor)
+      allow(processor).to receive(:assets_in).and_return(assets)
+      allow(Crawler::PageProcessor).to receive(:new).and_return(processor)
+    end
+
+    it "returns all the assets in the page" do
+      assets = page.assets
+
+      expect(assets.length).to eq 2
     end
   end
 end

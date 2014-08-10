@@ -22,5 +22,12 @@ describe Crawler::HrefNormalizer do
 
       expect(url).to eq 'http://www.google.com/pages/another/page'
     end
+
+    it "returns nil if the href can't be processed" do
+      allow(URI).to receive(:join).and_raise(StandardError)
+      url = normalizer.url_for 'another/page'
+
+      expect(url).to be nil
+    end
   end
 end
