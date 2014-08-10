@@ -16,7 +16,7 @@ module Crawler
 
     def url_for(href)
       URI.join(location, clean(href)).to_s
-    rescue => e
+    rescue
       nil # because it's easier to compact later
     end
 
