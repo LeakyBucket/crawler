@@ -49,6 +49,13 @@ describe Crawler::Page do
 
       expect(links.length).to eq 3
     end
+
+    it "removes nils from the links list" do
+      hrefs << nil
+      links = page.links
+
+      expect(links.length).to eq 3
+    end
   end
 
   describe "#assets" do
