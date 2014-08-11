@@ -1,6 +1,7 @@
 require 'faraday'
 require 'faraday_middleware'
 require 'nokogiri'
+require 'set'
 
 require_relative 'crawler/config.rb'
 require_relative 'crawler/page.rb'
